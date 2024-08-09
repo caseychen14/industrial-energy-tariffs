@@ -1,6 +1,8 @@
 
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
+import os
+import requests
 import pandas as pd
 
 iou = pd.read_csv("../data/iou_zipcodes_2020.csv")
@@ -33,7 +35,21 @@ def get_ei(zipcode):
     else:
         return "ZIP code not found in the dataset."
 
-print(iou.head(10))
-print(get_zipcode(33.6319,-87.0597))
-print(get_ei(get_zipcode(33.6319,-87.0597)))
-#33.6319,-87.0597 > 35130 > 195 > Alabama Power Co
+def open_api(url):
+    folder = "../data/openei"
+    filename = "utility_rates.csv"
+
+    local_path = os.path.join(folder, filename)
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        with open(local_path, 'wb') as file:
+            file.write(response.content)
+        print(f"File downloaded successfully and saved to {local_path}")
+    else:
+        raise Exception(f"Failed to download file. Status code: {response.status_code}")
+
+if __name__ == "__main__":
+    open_api("https://api.openei.org/utility_rates?version=3&format=csv&limit=3&eia=195&api_key=GU3aRPzDoNMmTmXcaVI8lUiApKSzRfBguuhFnhOa&detail=full")
+    new_df = pd.read_csv("../data/openei/utility_rates.csv")
+    print(new_df.head(10))
