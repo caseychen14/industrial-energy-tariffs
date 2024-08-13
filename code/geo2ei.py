@@ -53,3 +53,6 @@ if __name__ == "__main__":
     open_api("https://api.openei.org/utility_rates?version=3&format=csv&limit=3&eia=195&api_key=GU3aRPzDoNMmTmXcaVI8lUiApKSzRfBguuhFnhOa&detail=full")
     new_df = pd.read_csv("../data/openei/utility_rates.csv")
     print(new_df.head(10))
+
+
+#add a few test cases
