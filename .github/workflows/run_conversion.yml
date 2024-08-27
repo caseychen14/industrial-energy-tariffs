@@ -1,0 +1,26 @@
+name: Run Conversion Script
+
+on: [push]
+
+jobs:
+  run-conversion:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'  # Specify the Python version you need
+
+    - name: Install dependencies
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run conversion.py
+      env:
+        API_KEY: ${{ secrets.API_KEY }}  # Access the secret as an environment variable
+      run: |
+        python conversion.py
